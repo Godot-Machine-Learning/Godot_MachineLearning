@@ -2,6 +2,7 @@
 #define NEURALNETWORK_H
 
 #include "core/reference.h"
+
 class NeuralNetwork : public Reference
 {
 	GDCLASS(NeuralNetwork,Reference);
