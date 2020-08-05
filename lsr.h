@@ -57,9 +57,21 @@ private:
 	void calculate_slope();
 
 	void calculate_bias();
+
 public:
+	simple_linear_regression();
 	simple_linear_regression(std::string model_name);
 	simple_linear_regression(std::vector<double> X, std::vector<double> y, unsigned short verbose);
+	simple_linear_regression(const simple_linear_regression& copyFromThis);
+	simple_linear_regression(simple_linear_regression&& moveFromThis);
+	simple_linear_regression& operator=(const simple_linear_regression& copyFromThis);
+	simple_linear_regression& operator=(simple_linear_regression&& moveFromThis);
+
+public:
+	void SetInputs(std::vector<double>);
+	void SetOutputs(std::vector<double>);
+
+public: //Functionalities
 	void fit();
 	double predict(double _X);
 	void save_model(std::string file_name);

@@ -85,6 +85,13 @@ void simple_linear_regression::calculate_bias()
 	this->b = (sigma_y - (this->m * this->sigma_X)) / this->N;
 }
 
+// Constructor without parameter
+simple_linear_regression::simple_linear_regression()
+{
+	//Lets keep it in this way
+	this->verbose = DEBUG;
+}
+
 // Constructor to load existing model
 simple_linear_regression::simple_linear_regression(std::string model_name)
 {
@@ -115,6 +122,44 @@ simple_linear_regression::simple_linear_regression(std::vector<double> X, std::v
 	this->X = X;
 	this->y = y;
 	this->verbose = verbose;
+}
+
+//Copy Constructor
+simple_linear_regression::simple_linear_regression(const simple_linear_regression& copyFromThis)
+{
+	this->X = copyFromThis.X;
+	this->y = copyFromThis.y;
+	this->verbose = copyFromThis.verbose;
+}
+
+//Move Constructor
+simple_linear_regression::simple_linear_regression(simple_linear_regression&& moveFromThis)
+{
+	this->X = moveFromThis.X;
+	this->y = moveFromThis.y;
+	this->verbose = moveFromThis.verbose;
+	moveFromThis.X.clear();
+	moveFromThis.y.clear();
+}
+
+//Copy Assignment
+simple_linear_regression& simple_linear_regression::operator=(const simple_linear_regression& copyFromThis)
+{
+	this->X = copyFromThis.X;
+	this->y = copyFromThis.y;
+	this->verbose = copyFromThis.verbose;
+	return *this;
+}
+
+//Move Assignment
+simple_linear_regression& simple_linear_regression::operator=(simple_linear_regression&& moveFromThis)
+{
+	this->X = moveFromThis.X;
+	this->y = moveFromThis.y;
+	this->verbose = moveFromThis.verbose;
+	moveFromThis.X.clear();
+	moveFromThis.y.clear();
+	return *this;
 }
 
 // method to train our model, where all methods merges. 
