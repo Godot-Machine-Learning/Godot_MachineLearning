@@ -10,7 +10,7 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
-
+#include <functional>
 /*
 Implementation of simple linear regression or Least Squares Regression
 Written By: Visweswaran N @ 2019-08-26
@@ -70,7 +70,7 @@ public:
 public:
 	void SetInputs(std::vector<double>);
 	void SetOutputs(std::vector<double>);
-
+	std::function<void(bool)> TrainingFinishFunc;
 public: //Functionalities
 	void fit();
 	double predict(double _X);

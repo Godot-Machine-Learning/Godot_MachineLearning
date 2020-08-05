@@ -173,6 +173,7 @@ void simple_linear_regression::fit()
 	this->calculate_slope();
 	this->calculate_bias();
 	print("Model has been trained :)");
+	TrainingFinishFunc(true);
 }
 
 // Method used for predicting future values
