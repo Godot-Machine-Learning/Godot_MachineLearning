@@ -190,3 +190,14 @@ void simple_linear_regression::save_model(std::string file_name)
 	file << this->m << "," << this->b;
 	file.close();
 }
+
+void simple_linear_regression::SetInputs(std::vector<double> setToThis)
+{
+	X = setToThis;
+}
+
+
+void simple_linear_regression::SetOutputs(std::vector<double> setToThis)
+{
+	y = setToThis;
+}
