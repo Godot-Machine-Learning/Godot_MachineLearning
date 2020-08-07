@@ -3,14 +3,11 @@
 #include <string>
 #include <future>
 #include <thread>
-#include "core/reference.h"
-#include "core/variant.h"
-
 #include "lsr.h"
+#include "IgodotNNInterfaces.h"
+//#define NNDEBUG
 
-#define NNDEBUG
-
-class SimpleLinearRegression : public Reference
+class SimpleLinearRegression : public IGodotNNInterfaces
 {
 	GDCLASS(SimpleLinearRegression,Reference);
 
@@ -21,11 +18,9 @@ public:
 	SimpleLinearRegression(SimpleLinearRegression&&);
 
 public:
-	void	SetInputs(const PoolRealArray&);
-	void	SetOutputs(const PoolRealArray&);
-	void TrainingFinishBindHere(bool);
-	void StartTraining(void);
-	real_t CalculateOutput(real_t);
+	void	BinderForFinished(bool);
+	void	StartTraining(void) override;
+	real_t	CalculateOutput(real_t) override;
 
 protected:
 	static void _bind_methods();
