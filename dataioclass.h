@@ -17,6 +17,7 @@ public: // Interfaces
 	std::vector<double> GetOutput() const noexcept;
 	void SetInputs(std::vector<double> toThis);
 	void SetOutputs(std::vector<double> toThis);
+
 private:
 	std::vector<double> _InputVector = {};
 	std::vector<double> _OutputVector = {};
