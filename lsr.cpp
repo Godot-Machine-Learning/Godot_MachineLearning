@@ -172,8 +172,13 @@ void simple_linear_regression::fit()
 	this->calculate_sigma();
 	this->calculate_slope();
 	this->calculate_bias();
+	if(TrainingFinish)
+	{
+		TrainingFinish(true);
+		std::cout<<"connected.."<<std::endl;
+	}
+
 	print("Model has been trained :)");
-	TrainingFinishFunc(true);
 }
 
 // Method used for predicting future values
@@ -192,13 +197,16 @@ void simple_linear_regression::save_model(std::string file_name)
 	file.close();
 }
 
-void simple_linear_regression::SetInputs(std::vector<double> setToThis)
+void simple_linear_regression::Train()
 {
-	X = setToThis;
+	std::lock_guard<std::mutex> LG(_trainingMutex);
+	X = GetInput();
+	y = GetOutput();
+	TrainFuture = std::async(std::launch::async,&simple_linear_regression::fit,this);
 }
 
-
-void simple_linear_regression::SetOutputs(std::vector<double> setToThis)
+std::vector<double> simple_linear_regression::Predict(std::vector<double> predictThis)
 {
-	y = setToThis;
+	std::lock_guard<std::mutex> LG(_trainingMutex);
+	return {predict(predictThis[0])};
 }
