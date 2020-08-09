@@ -10,12 +10,17 @@
 #include <sstream>
 #include <fstream>
 #include <vector>
-#include <functional>
+#include <future>
+#include <mutex>
+#include "dataioclass.h"
+#include "itrainpredict.h"
+
 /*
 Implementation of simple linear regression or Least Squares Regression
 Written By: Visweswaran N @ 2019-08-26
 */
-class simple_linear_regression
+
+class simple_linear_regression : public DataIOClass, public ITrainPredict
 {
 private:
 	// ~~~~~~~~~~~~~ PRIVATE VARIABLES ~~~~~~~~~~~~
@@ -67,11 +72,13 @@ public:
 	simple_linear_regression& operator=(const simple_linear_regression& copyFromThis);
 	simple_linear_regression& operator=(simple_linear_regression&& moveFromThis);
 
-public:
-	void SetInputs(std::vector<double>);
-	void SetOutputs(std::vector<double>);
-	std::function<void(bool)> TrainingFinishFunc;
-public: //Functionalities
+public: //Overrited Interfaces
+	void Train() override;
+	std::vector<double> Predict(std::vector<double>) override;
+	std::future<void> TrainFuture;
+	std::mutex _trainingMutex;
+
+protected: //Functionalities
 	void fit();
 	double predict(double _X);
 	void save_model(std::string file_name);

@@ -2,7 +2,7 @@
 
 SimpleLinearRegression::SimpleLinearRegression()
 {
-	_simpleLR.TrainingFinishFunc = std::bind(&SimpleLinearRegression::BinderForFinished,this,std::placeholders::_1);
+	_simpleLR.TrainingFinish = std::bind(&SimpleLinearRegression::BinderForFinished,this,std::placeholders::_1);
 	ADD_SIGNAL(MethodInfo("TrainingFinished", PropertyInfo(Variant::BOOL, "TEST TEXT")));
 }
 
@@ -44,16 +44,15 @@ void SimpleLinearRegression::BinderForFinished(bool input)
 
 void SimpleLinearRegression::StartTraining(void)
 {
+	std::cout<<"Training Start Command Received"<<std::endl;
 	_simpleLR.SetInputs(GetInputVector());
 	_simpleLR.SetOutputs(GetOutputVector());
-	std::cout<<"Training Start Command Received"<<std::endl;
-	std::function<void(void)> myFo = std::bind(&simple_linear_regression::fit,&_simpleLR);
-	TrainingFuture= std::async(std::launch::async,myFo);
+	_simpleLR.Train();
 }
 
 real_t SimpleLinearRegression::CalculateOutput(real_t calculateThis)
 {
 	std::cout<<"Calculate Output CMD received Value: "<<calculateThis<<std::endl;
-	std::cout<<"Output"<<_simpleLR.predict(calculateThis)<<std::endl;
-	return static_cast<real_t>(_simpleLR.predict(calculateThis));
+	std::vector<double> output = _simpleLR.Predict({calculateThis});
+	return output[0];
 }
