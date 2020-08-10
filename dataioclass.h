@@ -14,6 +14,7 @@ public:
 
 public: // Interfaces
 	std::vector<double> GetInput() const noexcept;
+	std::vector<std::vector<double>> GetMultipleInput() const noexcept;
 	std::vector<double> GetOutput() const noexcept;
 	void InsertMultipleInput(std::vector<double> insertThis);
 	void SetInputs(std::vector<double> toThis);

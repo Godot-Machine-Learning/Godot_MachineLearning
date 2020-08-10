@@ -21,7 +21,7 @@ public:
 	void	BinderForFinished(bool);
 	void	StartTraining(void) override;
 	real_t	CalculateOutput(real_t) override;
-	real_t  CalculateForMultipleOutput(PoolRealArray){return 0;};
+	real_t  CalculateForMultipleInput(PoolRealArray) override {return 0;};
 protected:
 	static void _bind_methods();
 
