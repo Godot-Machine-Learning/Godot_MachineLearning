@@ -9,9 +9,26 @@
 using json = nlohmann::json;
 
 
-void LinearRegression::print(std::string message)
+
+LinearRegression::LinearRegression()
 {
-	if (verbose) std::cout << message << "\n";
+	verbose = DEBUG;
+}
+
+LinearRegression::LinearRegression(const LinearRegression& copyFromThis)
+{
+	this->X = copyFromThis.X;
+	this->y = copyFromThis.y;
+	this->verbose = copyFromThis.verbose;
+}
+
+LinearRegression::LinearRegression(LinearRegression&& moveFromThis)
+{
+	this->X = moveFromThis.X;
+	this->y = moveFromThis.y;
+	this->verbose = moveFromThis.verbose;
+	moveFromThis.X.clear();
+	moveFromThis.y.clear();
 }
 
 LinearRegression::LinearRegression(std::string model_name)
@@ -24,6 +41,27 @@ LinearRegression::LinearRegression(std::string model_name)
 	file.close();
 	std::vector<double> b = j["bias"];
 	bias = b;
+}
+LinearRegression& LinearRegression::operator=(const LinearRegression &copyFromThis)
+{
+	this->X = copyFromThis.X;
+	this->y = copyFromThis.y;
+	this->verbose = copyFromThis.verbose;
+	return *this;
+}
+
+LinearRegression& LinearRegression::operator=(LinearRegression &&moveFromThis)
+{
+	this->X = moveFromThis.X;
+	this->y = moveFromThis.y;
+	moveFromThis.X.clear();
+	moveFromThis.y.clear();
+	return *this;
+}
+
+void LinearRegression::print(std::string message)
+{
+	if (verbose) std::cout << message << "\n";
 }
 
 void LinearRegression::fit()
@@ -81,6 +119,11 @@ void LinearRegression::fit()
 	{
 		bias.push_back(i[0]);
 	}
+	if(TrainingFinish)
+	{
+		TrainingFinish(true);
+		std::cout<<"connected.."<<std::endl;
+	}
 	print("Found");
 }
 
@@ -116,4 +159,18 @@ void LinearRegression::save_model(std::string model_name)
 std::vector<double> LinearRegression::get_bias()
 {
 	return bias;
+}
+
+void LinearRegression::Train()
+{
+	std::lock_guard<std::mutex> LG(_trainingMutex);
+	X = GetMultipleInput();
+	y = GetOutput();
+	TrainFuture = std::async(std::launch::async,&LinearRegression::fit,this);
+}
+
+std::vector<double> LinearRegression::Predict(std::vector<double> predictThis)
+{
+	std::lock_guard<std::mutex> LG(_trainingMutex);
+	return {predict(predictThis)};
 }

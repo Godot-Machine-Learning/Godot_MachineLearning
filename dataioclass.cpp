@@ -69,3 +69,8 @@ void DataIOClass::InsertMultipleInput(std::vector<double> insertThis)
 {
 	this->_MultipleInputVector.push_back(insertThis);
 }
+
+std::vector<std::vector<double>> DataIOClass::GetMultipleInput() const noexcept
+{
+	return _MultipleInputVector;
+}

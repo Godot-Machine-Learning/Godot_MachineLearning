@@ -172,12 +172,12 @@ void simple_linear_regression::fit()
 	this->calculate_sigma();
 	this->calculate_slope();
 	this->calculate_bias();
+
 	if(TrainingFinish)
 	{
 		TrainingFinish(true);
 		std::cout<<"connected.."<<std::endl;
 	}
-
 	print("Model has been trained :)");
 }
 

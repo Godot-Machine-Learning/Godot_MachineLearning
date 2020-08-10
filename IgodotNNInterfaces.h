@@ -34,7 +34,7 @@ public: //Interfaces For NoNGodot
 public:
 	virtual void	StartTraining(void)=0;
 	virtual real_t	CalculateOutput(real_t)=0;
-	virtual real_t	CalculateForMultipleOutput(PoolRealArray)=0;
+	virtual real_t	CalculateForMultipleInput(PoolRealArray)=0;
 
 private:
 	std::vector<std::vector<double>> _multipleInputVector={};

@@ -9,27 +9,41 @@
 #include <string>
 #include <vector>
 #include <fstream>
-
-class LinearRegression
+#include <future>
+#include <mutex>
+#include "dataioclass.h"
+#include "itrainpredict.h"
+class LinearRegression : public DataIOClass, public ITrainPredict
 {
 private:
 	// Independent variable X
-	std::vector<std::vector<double>> X;
-
+	std::vector<std::vector<double>> X={};
 	std::vector<double> y;
-
 	std::vector<double> bias;
+	unsigned short int verbose=0;
 
-	unsigned short int verbose;
 private:
 	void print(std::string message);
 	
 public:
+	LinearRegression();
+	LinearRegression(const LinearRegression& copyFromThis);
+	LinearRegression(LinearRegression&& moveFromThis);
 	LinearRegression(std::string model_name);
-	LinearRegression(std::vector<std::vector<double>> X, std::vector<double> y, unsigned short int verbose) : X(X), y(y), verbose(verbose) {}
+	virtual ~LinearRegression(){};
+	LinearRegression& operator = (const LinearRegression& copyFromThis);
+	LinearRegression& operator = (LinearRegression&& moveFromThis);
+	LinearRegression(std::vector<std::vector<double>> X, std::vector<double> y, unsigned short int verbose) : X(X), y(y), verbose(verbose) {};
+public:
 	void fit();
 	double predict(std::vector<double> test);
 	void save_model(std::string model_name);
-
 	std::vector<double> get_bias();
+
+public: //Overrited Interfaces
+	void Train() override;
+	std::vector<double> Predict(std::vector<double>) override;
+	std::future<void> TrainFuture;
+	std::mutex _trainingMutex;
+
 };
