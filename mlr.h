@@ -13,6 +13,13 @@
 #include <mutex>
 #include "dataioclass.h"
 #include "itrainpredict.h"
+
+/*
+Similar class of scikit-learn's GaussianNB
+Written By: Visweswaran N on 2019-09-02
+Edited By:  https://github.com/JUNZ1 Aug/2020
+*/
+
 class LinearRegression : public DataIOClass, public ITrainPredict
 {
 private:
@@ -43,6 +50,7 @@ public:
 public: //Overrited Interfaces
 	void Train() override;
 	std::vector<double> Predict(std::vector<double>) override;
+private:
 	std::future<void> TrainFuture;
 	std::mutex _trainingMutex;
 
