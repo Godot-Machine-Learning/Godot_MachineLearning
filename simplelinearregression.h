@@ -9,7 +9,7 @@
 
 class SimpleLinearRegression : public IGodotNNInterfaces
 {
-	GDCLASS(SimpleLinearRegression,Reference);
+	GDCLASS(SimpleLinearRegression,IGodotNNInterfaces);
 
 public:
 	SimpleLinearRegression();
