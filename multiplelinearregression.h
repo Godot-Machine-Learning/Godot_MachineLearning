@@ -6,7 +6,7 @@
 #include "mlr.h"
 class MultipleLinearRegression : public IGodotNNInterfaces
 {
-	GDCLASS(MultipleLinearRegression,Reference);
+	GDCLASS(MultipleLinearRegression,IGodotNNInterfaces);
 
 public:
 	MultipleLinearRegression();
