@@ -75,6 +75,7 @@ public:
 public: //Overrited Interfaces
 	void Train() override;
 	std::vector<double> Predict(std::vector<double>) override;
+private:
 	std::future<void> TrainFuture;
 	std::mutex _trainingMutex;
 

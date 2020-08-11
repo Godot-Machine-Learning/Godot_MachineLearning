@@ -13,7 +13,11 @@
 #include <set>
 #include <map>
 #include "json.h"
-
+#include <future>
+#include <mutex>
+#include <algorithm>
+#include "dataioclass.h"
+#include "itrainpredict.h"
 using json = nlohmann::json;
 
 /*
@@ -48,15 +52,16 @@ public:
 /*
 Similar class of scikit-learn's GaussianNB
 Written By: Visweswaran N on 2019-09-02
+Edited By:  https://github.com/JUNZ1
 */
-class gaussian_naive_bayes
+class gaussian_naive_bayes : public DataIOClass, public ITrainPredict
 {
 
 private:
 	// Independent variable
-	std::vector<std::vector<double>> X;
+	std::vector<std::vector<double>> X ={};
 	// Dependent variable
-	std::vector<unsigned long int> y;
+	std::vector<unsigned long int> y = {};
 	// Verbose to print debug messages
 	unsigned short verbose;
 
@@ -90,6 +95,15 @@ public:
 	*/
 	gaussian_naive_bayes(std::vector<std::vector<double>> X, std::vector<unsigned long int> y, unsigned short verbose): X(X), y(y), verbose(verbose){}
 
+	gaussian_naive_bayes();
+
+	gaussian_naive_bayes(const gaussian_naive_bayes& copyFromThis);
+
+	gaussian_naive_bayes(gaussian_naive_bayes&& moveFromThis);
+	virtual ~gaussian_naive_bayes(){};
+	gaussian_naive_bayes& operator=(const gaussian_naive_bayes& copyFromThis);
+
+	gaussian_naive_bayes& operator=(gaussian_naive_bayes&& moveFromThis);
 	/*
 	For fitting the model
 	*/
@@ -109,5 +123,12 @@ public:
 	Used to load the saved model
 	*/
 	void load_model(std::string model_name);
+
+public: //Overrited Interfaces
+	void Train() override;
+	std::vector<double> Predict(std::vector<double>) override;
+private:
+	std::mutex _trainingMutex;
+	std::future<void> _trainFuture;
 };
 

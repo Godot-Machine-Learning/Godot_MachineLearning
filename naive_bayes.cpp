@@ -125,7 +125,53 @@ void gaussian_naive_bayes::fit()
 			}
 		}
 	}
+	if(TrainingFinish)
+	{
+		TrainingFinish(true);
+		std::cout<<"connected.."<<std::endl;
+	}
 }
+
+gaussian_naive_bayes::gaussian_naive_bayes()
+{
+	this->verbose = DEBUG;
+}
+
+gaussian_naive_bayes::gaussian_naive_bayes(const gaussian_naive_bayes& copyFromThis)
+{
+	this->verbose = copyFromThis.verbose;
+	this->X = copyFromThis.X;
+	this->y = copyFromThis.y;
+}
+
+gaussian_naive_bayes::gaussian_naive_bayes(gaussian_naive_bayes&& moveFromThis)
+{
+	this->verbose = moveFromThis.verbose;
+	this->X = moveFromThis.X;
+	this->y = moveFromThis.y;
+	moveFromThis.X.clear();
+	moveFromThis.y.clear();
+}
+
+gaussian_naive_bayes& gaussian_naive_bayes::operator=(const gaussian_naive_bayes& copyFromThis)
+{
+	this->verbose = copyFromThis.verbose;
+	this->X = copyFromThis.X;
+	this->y = copyFromThis.y;
+	return *this;
+}
+
+gaussian_naive_bayes& gaussian_naive_bayes::operator=(gaussian_naive_bayes&& moveFromThis)
+{
+	this->verbose = moveFromThis.verbose;
+	this->X = moveFromThis.X;
+	this->y = moveFromThis.y;
+	moveFromThis.X.clear();
+	moveFromThis.y.clear();
+	return *this;
+}
+
+
 
 std::map<unsigned long int, double> gaussian_naive_bayes::predict(std::vector<double> X_test)
 {
@@ -209,3 +255,27 @@ void gaussian_naive_bayes::load_model(std::string model_name)
 		mean_variance_map[label] = mv_vector;
 	}
 }
+
+void gaussian_naive_bayes::Train()
+{
+	std::lock_guard<std::mutex> LG(_trainingMutex);
+	X.clear();
+	y.clear();
+	X = GetMultipleInput();
+	for(auto eachOutput : GetOutput())
+	{
+		y.push_back(static_cast<unsigned long int>(eachOutput));
+	}
+	_trainFuture = std::async(std::launch::async,&gaussian_naive_bayes::fit,this);
+}
+
+std::vector<double> gaussian_naive_bayes::Predict(std::vector<double> predictThis)
+{
+	std::lock_guard<std::mutex> LG(_trainingMutex);
+	std::map<unsigned long int, double> probabilities = predict(predictThis);
+	std::max_element(probabilities.begin(),probabilities.end());
+	unsigned long int belongedclass = std::max_element(probabilities.begin(),probabilities.end())->first;
+	return{static_cast<double>(belongedclass)};
+}
+
+
